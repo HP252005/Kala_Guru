@@ -1,0 +1,22 @@
+{
+  "name": "kala-guru",
+  "version": "1.0.0",
+  "description": "Kala Guru - Preserving and teaching the traditional art forms of Vidarbha, Maharashtra with an AI vision tutor and interactive drawing canvas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "keywords": [
+    "vidarbha",
+    "art",
+    "gond",
+    "chitari",
+    "korku",
+    "ai-tutor",
+    "canvas",
+    "indian-folk-art"
+  ],
+  "author": "Kala Guru Team",
+  "license": "MIT"
+}

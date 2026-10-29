@@ -1,0 +1,335 @@
+/* ============================================================
+   Kala Guru - Warm Cultural & Art-Themed Design
+   Earthy Palette: Terracotta, Ochre, Deep Green, Cream
+   All English UI
+============================================================ */
+
+:root {
+  --terracotta: #B83A24;
+  --terracotta-dark: #8F2714;
+  --terracotta-light: #F8E9E6;
+  --ochre: #E5A93B;
+  --ochre-dark: #B45309;
+  --ochre-light: #FEF3C7;
+  --forest-green: #15803D;
+  --forest-green-dark: #14532D;
+  --charcoal: #1C1917;
+  --cream: #FAF7F2;
+  --cream-dark: #EFE8DC;
+  --border-parchment: #D7CCB9;
+}
+
+body {
+  font-family: 'Poppins', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--cream);
+  color: var(--charcoal);
+  background-image: 
+    radial-gradient(var(--border-parchment) 0.8px, transparent 0.8px),
+    radial-gradient(var(--border-parchment) 0.8px, var(--cream) 0.8px);
+  background-size: 28px 28px;
+  background-position: 0 0, 14px 14px;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--cream-dark);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--terracotta);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--terracotta-dark);
+}
+
+/* Folk Cultural Accent Borders */
+.folk-border {
+  border: 3px double var(--terracotta);
+  position: relative;
+}
+
+.folk-border-ornate {
+  border: 4px solid var(--terracotta);
+  outline: 2px dashed var(--ochre);
+  outline-offset: -8px;
+}
+
+.folk-header-stripe {
+  background: linear-gradient(135deg, #8F2714 0%, #B83A24 50%, #C84B31 100%);
+  position: relative;
+}
+
+.folk-header-stripe::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 5px;
+  background: repeating-linear-gradient(
+    90deg,
+    var(--ochre),
+    var(--ochre) 14px,
+    var(--terracotta-dark) 14px,
+    var(--terracotta-dark) 28px
+  );
+}
+
+/* Tool Buttons in Practice Studio */
+.tool-btn {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.tool-btn:hover {
+  background-color: var(--ochre-light);
+  color: var(--terracotta);
+}
+.tool-btn.active {
+  background-color: var(--terracotta);
+  color: #FFFFFF;
+  box-shadow: 0 4px 10px rgba(184, 58, 36, 0.3);
+}
+
+/* Swatch Buttons */
+.swatch-btn {
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+.swatch-btn:hover {
+  transform: scale(1.15);
+}
+.swatch-btn.selected {
+  outline: 3px solid var(--terracotta);
+  outline-offset: 2px;
+  transform: scale(1.1);
+}
+
+/* Breadcrumb flow indicators */
+.flow-step {
+  color: #78716C;
+  transition: color 0.2s ease;
+}
+.flow-step.active {
+  color: var(--terracotta);
+  font-weight: 700;
+}
+
+/* Pulse Glow Animation for Check Painting Button */
+@keyframes pulseGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(184, 58, 36, 0.4);
+  }
+  50% {
+    box-shadow: 0 0 0 10px rgba(184, 58, 36, 0);
+  }
+}
+.pulse-glow {
+  animation: pulseGlow 2.5s infinite;
+}
+
+/* Smooth Canvas Brush Cursor Ring */
+.brush-cursor-indicator {
+  position: absolute;
+  pointer-events: none;
+  border-radius: 50%;
+  border: 2px solid var(--terracotta);
+  background: rgba(184, 58, 36, 0.15);
+  transform: translate(-50%, -50%);
+  z-index: 40;
+  opacity: 0;
+  will-change: left, top;
+}
+
+/* ============================================================
+   EXTERNAL WEBCAM & REAL PAPER SCANNER STYLING
+============================================================ */
+.webcam-viewport-container {
+  position: relative;
+  background-color: #0f172a;
+  border-radius: 1rem;
+  overflow: hidden;
+  box-shadow: inset 0 2px 10px rgba(0, 0, 0, 0.6);
+  aspect-ratio: 4 / 3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#webcam-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.2s ease;
+}
+
+/* Paper Alignment Corner Brackets (Guides where to place paper) */
+.paper-frame-overlay {
+  position: absolute;
+  inset: 12%;
+  pointer-events: none;
+  border: 2px dashed rgba(255, 255, 255, 0.4);
+  border-radius: 12px;
+  box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.35); /* Focus vignette */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.corner-bracket {
+  position: absolute;
+  width: 24px;
+  height: 24px;
+  border-color: #E5A93B;
+  border-style: solid;
+  border-width: 0;
+}
+.corner-bracket.top-left {
+  top: -2px;
+  left: -2px;
+  border-top-width: 4px;
+  border-left-width: 4px;
+  border-top-left-radius: 6px;
+}
+.corner-bracket.top-right {
+  top: -2px;
+  right: -2px;
+  border-top-width: 4px;
+  border-right-width: 4px;
+  border-top-right-radius: 6px;
+}
+.corner-bracket.bottom-left {
+  bottom: -2px;
+  left: -2px;
+  border-bottom-width: 4px;
+  border-left-width: 4px;
+  border-bottom-left-radius: 6px;
+}
+.corner-bracket.bottom-right {
+  bottom: -2px;
+  right: -2px;
+  border-bottom-width: 4px;
+  border-right-width: 4px;
+  border-bottom-right-radius: 6px;
+}
+
+/* Animated Laser Scan Beam */
+.laser-scan-line {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, transparent, #E5A93B 20%, #B83A24 50%, #E5A93B 80%, transparent);
+  box-shadow: 0 0 14px 3px rgba(229, 169, 59, 0.8);
+  top: 0;
+  opacity: 0;
+  pointer-events: none;
+  z-index: 25;
+}
+
+.laser-scan-line.active-scan {
+  opacity: 1;
+  animation: laserSweep 1.8s ease-in-out infinite alternate;
+}
+
+@keyframes laserSweep {
+  0% { top: 12%; }
+  100% { top: 88%; }
+}
+
+/* ============================================================
+   MEET YOUR KALA GURU COMPANION ("Guru Mitra")
+============================================================ */
+.companion-bubble-tail::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  left: 24px;
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent;
+  border-right: 8px solid transparent;
+  border-top: 8px solid #FFFBEB;
+}
+
+@keyframes companionGentleFloat {
+  0%, 100% { transform: translateY(0px) rotate(0deg); }
+  50% { transform: translateY(-5px) rotate(1deg); }
+}
+
+.companion-avatar-float {
+  animation: companionGentleFloat 4s ease-in-out infinite;
+}
+
+/* ============================================================
+   STEP PROGRESSION STUDIO (Visual Step-by-Step Evolution)
+============================================================ */
+.progression-stage-card {
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+}
+
+.progression-stage-card:hover {
+  transform: translateY(-2px);
+  border-color: var(--ochre);
+}
+
+.progression-stage-card.active {
+  border-color: var(--terracotta);
+  background-color: #FEF3C7;
+  box-shadow: 0 4px 14px rgba(184, 58, 36, 0.15);
+}
+
+/* ============================================================
+   KALA PASSPORT DIGITAL BOOKLET & STAMPS
+============================================================ */
+.passport-cover-leather {
+  background: linear-gradient(145deg, #4A150E 0%, #782214 50%, #3B0E09 100%);
+  border: 3px solid #E5A93B;
+  box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.5), inset 0 1px 2px rgba(255, 255, 255, 0.2);
+}
+
+.rubber-stamp {
+  position: relative;
+  border: 3px double #B83A24;
+  border-radius: 12px;
+  padding: 8px 12px;
+  color: #B83A24;
+  font-family: 'Cinzel Decorative', Georgia, serif;
+  transform: rotate(-4deg);
+  opacity: 0.95;
+  box-shadow: 0 0 0 1px rgba(184, 58, 36, 0.2);
+  transition: transform 0.2s ease;
+}
+
+.rubber-stamp:hover {
+  transform: rotate(0deg) scale(1.05);
+}
+
+@keyframes rubberStampThud {
+  0% { transform: scale(2.2) rotate(15deg); opacity: 0; }
+  70% { transform: scale(0.95) rotate(-6deg); opacity: 0.9; }
+  100% { transform: scale(1) rotate(-4deg); opacity: 0.95; }
+}
+
+.stamp-unlocked-anim {
+  animation: rubberStampThud 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+}
+
+.badge-medal-card {
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.badge-medal-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px -5px rgba(0,0,0,0.15);
+}
+
+/* Notification Toast */
+#passport-toast {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  transition: all 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}

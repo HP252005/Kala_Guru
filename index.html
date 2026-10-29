@@ -1,0 +1,1041 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kala Guru - Vidarbha Traditional Folk Art & Live AI Tutor</title>
+  
+  <!-- Fonts: Cultural Serif & Clean Modern Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@700&family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            terracotta: {
+              DEFAULT: '#B83A24',
+              dark: '#8F2714',
+              light: '#F8E9E6'
+            },
+            ochre: {
+              DEFAULT: '#E5A93B',
+              dark: '#B45309',
+              light: '#FEF3C7'
+            },
+            forestGreen: {
+              DEFAULT: '#15803D',
+              dark: '#14532D'
+            },
+            parchment: {
+              DEFAULT: '#FAF7F2',
+              dark: '#EFE8DC'
+            }
+          },
+          fontFamily: {
+            display: ['"Cinzel Decorative"', 'Georgia', 'serif'],
+            sans: ['Poppins', 'system-ui', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="min-h-screen flex flex-col text-stone-900 bg-[#FAF7F2] antialiased selection:bg-amber-200 selection:text-amber-900">
+
+  <!-- ==========================================
+       NAVIGATION BAR WITH "VIDARBHA" DROPDOWN & KALA PASSPORT
+  =========================================== -->
+  <header class="sticky top-0 z-50 folk-header-stripe text-white shadow-lg">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      
+      <!-- Logo & Website Title -->
+      <a href="#home" class="flex items-center gap-3.5 group">
+        <div class="w-11 h-11 rounded-full bg-gradient-to-tr from-amber-600 via-amber-400 to-amber-200 text-stone-950 font-bold text-2xl flex items-center justify-center shadow-md group-hover:scale-105 transition-transform font-display border border-amber-200">
+          K
+        </div>
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold tracking-wider font-display text-amber-200">
+            Kala Guru
+          </h1>
+          <p class="text-[11px] text-amber-100/90 font-medium tracking-tight">
+            Preserving Vidarbha's Folk Art with Live AI Guidance
+          </p>
+        </div>
+      </a>
+
+      <!-- Navigation & Companion Controls -->
+      <nav class="flex items-center gap-2.5 sm:gap-4 text-sm font-medium">
+        
+        <!-- Kala Passport Badge Button -->
+        <button id="btn-header-passport" type="button" class="px-3 py-1.5 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-300/40 text-amber-100 hover:text-white flex items-center gap-2 transition-all shadow-sm">
+          <span>🛂</span>
+          <span class="hidden md:inline font-semibold">Kala Passport</span>
+          <span id="header-passport-count" class="px-2 py-0.5 rounded-full bg-amber-400 text-stone-950 text-xs font-bold font-mono">1/14</span>
+        </button>
+
+        <!-- Companion Reading Level Toggle -->
+        <button id="companion-level-toggle" type="button" data-level="junior" class="px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 text-amber-100 text-xs font-semibold flex items-center gap-1.5 border border-white/20 transition-colors" title="Toggle reading level for kids vs scholars">
+          <span>🐣 Junior Explorer</span>
+        </button>
+
+        <!-- Companion Voice Language Selector -->
+        <div class="relative hidden sm:flex items-center">
+          <select id="companion-lang-select" class="px-2.5 py-1.5 rounded-xl bg-stone-900/60 text-amber-200 text-xs font-semibold border border-amber-400/40 focus:outline-none cursor-pointer">
+            <option value="en">🔊 Voice: EN</option>
+            <option value="hi">🔊 Voice: HI (हिंदी)</option>
+            <option value="mr">🔊 Voice: MR (मराठी)</option>
+          </select>
+        </div>
+
+        <a href="#home" class="text-amber-100 hover:text-white transition-colors hidden lg:inline">
+          Home
+        </a>
+
+        <!-- Vidarbha Dropdown Menu -->
+        <div class="relative">
+          <button id="vidarbha-dropdown-btn" type="button" class="px-3.5 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-stone-950 font-semibold shadow-md flex items-center gap-1.5 transition-all hover:scale-105 text-xs sm:text-sm" aria-expanded="false" aria-haspopup="true">
+            <span>Vidarbha Cities</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+
+          <!-- Dropdown List Container -->
+          <div id="vidarbha-dropdown-menu" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-2xl shadow-2xl border-2 border-stone-200 overflow-hidden z-50 divide-y divide-stone-100 animate-in fade-in slide-in-from-top-2 duration-150">
+            <!-- Populated dynamically by app.js -->
+          </div>
+        </div>
+
+      </nav>
+
+    </div>
+  </header>
+
+  <!-- Flow Breadcrumb Tracker (City -> Learn -> Practice) -->
+  <div id="flow-breadcrumb" class="hidden bg-white border-b border-stone-200 py-2.5 px-4 sticky top-20 z-40 shadow-sm">
+    <div class="max-w-7xl mx-auto flex items-center justify-between text-xs font-medium">
+      <div class="flex items-center gap-2 sm:gap-4 overflow-x-auto">
+        <a href="#home" class="text-stone-500 hover:text-stone-900 flex items-center gap-1">
+          <span>Home</span>
+          <span>&rsaquo;</span>
+        </a>
+        <span id="flow-step-city" class="flow-step">1. City Art Form</span>
+        <span class="text-stone-300">&rsaquo;</span>
+        <span id="flow-step-learn" class="flow-step">2. Step-by-Step Learning</span>
+        <span class="text-stone-300">&rsaquo;</span>
+        <span id="flow-step-practice" class="flow-step">3. Practice Canvas &amp; Live AI</span>
+      </div>
+      <a href="#home" class="text-terracotta text-xs font-semibold hover:underline hidden sm:inline">
+        Back to All Cities
+      </a>
+    </div>
+  </div>
+
+  <!-- MAIN APP CONTAINER FOR ALL PAGES -->
+  <main class="flex-1">
+
+    <!-- ==========================================
+         PAGE 1: HOME PAGE
+    =========================================== -->
+    <section id="page-home" class="app-page py-10 sm:py-16 space-y-16">
+      
+      <!-- Hero Section -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="relative overflow-hidden rounded-3xl bg-gradient-to-br from-[#8F2714] via-[#B83A24] to-[#C84B31] text-white p-8 sm:p-12 lg:p-16 shadow-2xl border-4 border-amber-300/40">
+          
+          <div class="relative z-10 max-w-3xl space-y-6">
+            <span class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-amber-400/20 text-amber-200 text-xs font-semibold border border-amber-300/30">
+              <span>🌾</span>
+              <span>Vidarbha Cultural Heritage Mission</span>
+            </span>
+
+            <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black font-display tracking-tight text-amber-100 leading-tight">
+              Master the Folk Art of Vidarbha with AI
+            </h2>
+
+            <p class="text-base sm:text-lg text-amber-100/90 leading-relaxed font-sans font-normal">
+              Kala Guru preserves and teaches the precious local painting and tribal art forms of Vidarbha's historic cities. Explore each city's unique cultural heritage, learn traditional motifs step by step, and paint either on digital canvas or real paper with live, intelligent AI tutor feedback!
+            </p>
+
+            <div class="pt-4 flex flex-wrap items-center gap-4">
+              <a href="#city/nagpur" class="px-6 py-3.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-stone-950 font-bold text-sm shadow-lg hover:shadow-xl transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                <span>Start Learning: Nagpur Chitari</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+
+              <a href="#city/chandrapur" class="px-6 py-3.5 rounded-xl bg-white/10 hover:bg-white/20 text-white font-semibold text-sm border border-white/30 backdrop-blur-sm transition-all">
+                Explore Gond Art
+              </a>
+            </div>
+          </div>
+
+          <!-- Decorative Cultural Motif Background -->
+          <div class="absolute -right-16 -bottom-16 w-96 h-96 opacity-10 pointer-events-none">
+            <svg viewBox="0 0 200 200" fill="currentColor">
+              <polygon points="100,10 40,190 190,78 10,78 160,190" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- MEET YOUR KALA GURU COMPANION SHOWCASE BANNER -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="bg-gradient-to-r from-amber-100 via-orange-50 to-amber-100 rounded-3xl border-2 border-amber-300 p-6 sm:p-8 shadow-sm flex flex-col md:flex-row items-center gap-6">
+          <div class="w-24 h-24 sm:w-28 sm:h-28 rounded-3xl bg-amber-500 text-stone-950 flex items-center justify-center text-5xl shadow-md companion-avatar-float border-2 border-amber-300 shrink-0">
+            🦚
+          </div>
+          <div class="space-y-2 flex-1 text-center md:text-left">
+            <div class="inline-flex items-center gap-2 px-3 py-0.5 rounded-full bg-amber-200 text-amber-900 text-xs font-bold uppercase tracking-wider">
+              <span>Meet Your Kala Guru Companion</span>
+            </div>
+            <h3 class="text-xl sm:text-2xl font-bold font-display text-stone-900">
+              Guru Mitra — A Friendly Cultural Art Guide
+            </h3>
+            <p class="text-xs sm:text-sm text-stone-700 leading-relaxed">
+              Designed especially for young learners and art disciples! Guru Mitra talks to you through every drawing step with encouraging audio in English, Hindi, and Marathi. Toggle between <strong>Junior Explorer 🐣</strong> for simple playful hints, and <strong>Senior Scholar 🎓</strong> for deep tribal symbolism.
+            </p>
+            <div class="flex flex-wrap items-center justify-center md:justify-start gap-2 pt-1 text-xs text-stone-600 italic">
+              <span class="px-2.5 py-1 rounded-lg bg-white/80 border border-stone-200">“Let's try this shape together!”</span>
+              <span class="px-2.5 py-1 rounded-lg bg-white/80 border border-stone-200">“You finished your first pattern—ready for next?”</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Cities of Vidarbha Cards Grid -->
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <div class="flex flex-col sm:flex-row sm:items-end justify-between gap-4 border-b-2 border-stone-200 pb-4">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-terracotta">Vidarbha Heritage Grid</span>
+            <h3 class="text-2xl sm:text-3xl font-bold font-display text-stone-900">
+              The 7 Sacred Art Traditions of Vidarbha
+            </h3>
+          </div>
+          <p class="text-xs text-stone-500 max-w-md">
+            Click any city card below to read its historical origin, inspect authentic motifs, and begin the guided drawing lesson.
+          </p>
+        </div>
+
+        <!-- Populated dynamically by app.js: Nagpur, Amravati, Akola, Chandrapur, Yavatmal, Washim, Buldhana -->
+        <div id="home-city-cards" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          <!-- Dynamically populated -->
+        </div>
+
+      </div>
+
+    </section>
+
+    <!-- ==========================================
+         PAGE 2: CITY PAGE (Reusable Template)
+    =========================================== -->
+    <section id="page-city" class="app-page hidden py-12">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 space-y-8">
+        
+        <!-- Breadcrumb back link -->
+        <div>
+          <a href="#home" class="inline-flex items-center gap-1.5 text-xs font-semibold text-terracotta hover:underline">
+            &larr; Back to Home &amp; City List
+          </a>
+        </div>
+
+        <!-- City Heritage Showcase Card -->
+        <div class="bg-white rounded-3xl border-2 border-stone-200 shadow-xl overflow-hidden p-6 sm:p-10 space-y-8">
+          
+          <!-- Header: City & Art Name -->
+          <div class="border-b border-stone-200 pb-6 space-y-2">
+            <div class="flex items-center gap-2">
+              <span id="city-page-name" class="px-3.5 py-1 rounded-full bg-amber-100 text-amber-900 font-bold text-xs uppercase tracking-wide border border-amber-300">
+                Nagpur
+              </span>
+              <span class="text-xs text-stone-400">•</span>
+              <span class="text-xs text-stone-500 font-medium">Famous Regional Painting Tradition</span>
+            </div>
+            
+            <h2 id="city-page-art-name" class="text-3xl sm:text-4xl font-bold font-display text-stone-900">
+              Chitari art
+            </h2>
+
+            <p id="city-page-tagline" class="text-sm font-semibold text-ochre-dark">
+              The 250-Year-Old Royal Maratha Folk Painting Guild
+            </p>
+          </div>
+
+          <!-- Main Visual & Info Section Side-by-Side -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+            
+            <!-- Large photo of painting -->
+            <div class="lg:col-span-5 flex justify-center">
+              <div class="folk-border-ornate bg-amber-50/50 p-4 rounded-2xl w-full max-w-sm aspect-square flex items-center justify-center shadow-inner">
+                <img id="city-page-image" src="images/nagpur.svg" alt="Vidarbha Folk Painting" class="w-full h-full object-contain drop-shadow-md">
+              </div>
+            </div>
+
+            <!-- 4 to 6 lines of Factual, Simple English Information -->
+            <div class="lg:col-span-7 space-y-4">
+              <h3 class="text-xs font-bold uppercase tracking-wider text-stone-500">About This Art Form</h3>
+              <p id="city-page-desc" class="text-stone-700 text-sm sm:text-base leading-relaxed font-sans">
+                <!-- Injected dynamically -->
+              </p>
+            </div>
+
+          </div>
+
+          <!-- Clear Question & Two Action Buttons -->
+          <div class="pt-6 border-t-2 border-stone-100 bg-amber-50/60 p-6 rounded-2xl border border-amber-200 text-center space-y-4">
+            <h4 class="text-lg sm:text-xl font-bold font-display text-stone-900">
+              Do you want to learn this painting?
+            </h4>
+            <div class="flex flex-wrap items-center justify-center gap-4">
+              <!-- Yes: Go to Learning page -->
+              <a id="btn-learn-yes" href="#learn/nagpur" class="px-6 py-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white font-semibold text-sm shadow-md hover:shadow-lg transition-all transform hover:-translate-y-0.5 flex items-center gap-2">
+                <span>Yes, teach me</span>
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+              </a>
+
+              <!-- Not now: Return to home / city list -->
+              <a id="btn-learn-not-now" href="#home" class="px-6 py-3 rounded-xl bg-white hover:bg-stone-100 text-stone-700 font-semibold text-sm border border-stone-300 shadow-sm transition-colors">
+                Not now
+              </a>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PAGE 3: LEARNING PAGE (Step Progression Studio + Chat)
+    =========================================== -->
+    <section id="page-learn" class="app-page hidden py-12">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+        
+        <!-- Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div class="space-y-1.5">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-xs font-bold border border-emerald-300">
+                Curriculum Mode
+              </span>
+              <span class="text-xs text-stone-400">•</span>
+              <span class="text-xs text-stone-500">Step-by-step master instruction</span>
+            </div>
+            <h2 id="learn-city-title" class="text-3xl sm:text-4xl font-bold font-display text-stone-900">
+              Nagpur • Chitari art
+            </h2>
+            <p id="learn-art-desc" class="text-sm text-stone-600 max-w-2xl leading-relaxed">
+              Explore the interactive step-by-step drawing evolution below to understand how traditional masters construct each layer.
+            </p>
+          </div>
+
+          <!-- Cultural Folklore Button -->
+          <button id="btn-companion-story" type="button" class="px-4 py-2.5 rounded-2xl bg-amber-500 hover:bg-amber-400 text-stone-950 text-xs font-bold shadow-md flex items-center gap-2 shrink-0 transition-transform hover:scale-105">
+            <span>📜</span>
+            <span>Hear the Folk Story</span>
+          </button>
+        </div>
+
+        <!-- NEW: STEP-BY-STEP DRAWING PROGRESSION STUDIO (Replaces YouTube video) -->
+        <div class="bg-white rounded-3xl border-2 border-stone-200 shadow-xl overflow-hidden p-6 sm:p-8 space-y-6">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-stone-200">
+            <div>
+              <span class="text-xs font-bold uppercase tracking-wider text-terracotta">Interactive Step Player</span>
+              <h3 class="text-xl font-bold font-display text-stone-900">Step-by-Step Drawing Process</h3>
+            </div>
+            
+            <!-- Timelapse Controls -->
+            <div class="flex items-center gap-2">
+              <button id="btn-progression-prev" class="px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold disabled:opacity-30 disabled:cursor-not-allowed">
+                ⏮ Prev Stage
+              </button>
+              <button id="btn-progression-play" class="px-4 py-1.5 rounded-lg bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold flex items-center gap-1 shadow">
+                <span>▶ Play Timelapse</span>
+              </button>
+              <button id="btn-progression-next" class="px-3 py-1.5 rounded-lg bg-stone-100 hover:bg-stone-200 text-stone-700 text-xs font-semibold disabled:opacity-30 disabled:cursor-not-allowed">
+                Next Stage ⏭
+              </button>
+              <button id="btn-progression-audio" class="px-2.5 py-1.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-900 text-xs font-semibold" title="Listen to step explanation">
+                🔊
+              </button>
+            </div>
+          </div>
+
+          <!-- Progression Layout: Left Large Visual, Right Stage Details & Timeline -->
+          <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+            
+            <!-- Left: High-Definition Progressive Vector Viewer -->
+            <div class="lg:col-span-7 flex flex-col items-center">
+              <div id="progression-visual-viewer" class="folk-border-ornate bg-amber-50/50 rounded-2xl w-full aspect-square max-w-md p-4 flex items-center justify-center shadow-inner overflow-hidden">
+                <!-- SVG Stage visual rendered dynamically -->
+              </div>
+              <div class="mt-3 flex items-center justify-between w-full max-w-md text-xs text-stone-500">
+                <span id="progression-stage-number" class="font-bold text-terracotta">Stage 1 of 5</span>
+                <span id="progression-stage-time" class="font-mono">Est: 3 mins</span>
+              </div>
+            </div>
+
+            <!-- Right: Stage Details & Thumbnails -->
+            <div class="lg:col-span-5 space-y-4">
+              <div class="bg-amber-50/60 p-4 rounded-2xl border border-amber-200 space-y-2">
+                <h4 id="progression-stage-title" class="text-sm font-bold text-stone-900 font-display">
+                  Sacred Ground &amp; Base Silhouette
+                </h4>
+                <p id="progression-stage-desc" class="text-xs text-stone-700 leading-relaxed font-sans">
+                  <!-- Injected dynamically -->
+                </p>
+                <div class="pt-2 border-t border-amber-200/80 text-[11px] text-stone-600">
+                  <span class="font-bold text-amber-900">🖌️ Traditional Technique:</span>
+                  <span id="progression-stage-tips">Use light rhythmic strokes.</span>
+                </div>
+                <div id="progression-stage-junior" class="p-2 bg-white rounded-xl border border-amber-300 text-[11px] text-amber-900 font-medium">
+                  <!-- Junior hint injected dynamically -->
+                </div>
+              </div>
+
+              <!-- Stage Thumbnails / Scrubber -->
+              <div class="space-y-1.5">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-stone-500">Jump to Construction Stage:</span>
+                <div id="progression-stages-thumbnails" class="grid grid-cols-1 gap-2">
+                  <!-- Populated dynamically by app.js -->
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Reference Image & Steps Side-by-Side -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+          
+          <!-- Left: Finished Reference Image -->
+          <div class="lg:col-span-5 space-y-4 sticky top-28">
+            <div class="folk-border-ornate bg-white p-4 rounded-2xl shadow-md space-y-3">
+              <span class="text-xs font-bold uppercase tracking-wider text-stone-500 block">Finished Master Reference</span>
+              <div class="aspect-square bg-amber-50/50 rounded-xl overflow-hidden p-2 flex items-center justify-center">
+                <img id="learn-reference-img" src="images/nagpur.svg" alt="Finished reference artwork" class="w-full h-full object-contain">
+              </div>
+              <p class="text-[11px] text-stone-500 text-center italic">
+                Study the proportions, outer boundaries, and color contrasts.
+              </p>
+            </div>
+          </div>
+
+          <!-- Right: 6 to 8 Sequential Teaching Steps & Chat -->
+          <div class="lg:col-span-7 space-y-4">
+            <h3 class="text-lg font-bold font-display text-stone-900">
+              Master Artisan Curriculum (6 to 8 Steps)
+            </h3>
+            
+            <div id="learn-steps-list" class="space-y-3">
+              <!-- Rendered dynamically by app.js -->
+            </div>
+
+            <!-- Ask the AI Tutor Chat Box -->
+            <div class="mt-8 bg-white p-6 rounded-2xl border-2 border-stone-200 shadow-md space-y-4">
+              <div class="flex items-center justify-between pb-3 border-b border-stone-200">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-full bg-amber-600 text-white font-bold text-xs flex items-center justify-center font-display">
+                    AI
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-stone-900 font-display">Ask the AI Tutor</h4>
+                    <p class="text-[11px] text-stone-500">Instant answers in English about materials, colors, and motifs</p>
+                  </div>
+                </div>
+                <span class="px-2 py-0.5 rounded text-[10px] bg-amber-100 text-amber-900 font-semibold border border-amber-300">
+                  English Only
+                </span>
+              </div>
+
+              <!-- Quick Chip Suggestions -->
+              <div class="flex flex-wrap gap-1.5">
+                <button type="button" class="chat-suggestion-chip px-2.5 py-1 rounded-full bg-stone-100 hover:bg-amber-100 text-[11px] text-stone-700 border border-stone-300 transition-colors" data-query="What natural materials and pigments were traditionally used?">
+                  🌿 Natural Materials
+                </button>
+                <button type="button" class="chat-suggestion-chip px-2.5 py-1 rounded-full bg-stone-100 hover:bg-amber-100 text-[11px] text-stone-700 border border-stone-300 transition-colors" data-query="What is the historical meaning of the primary motifs?">
+                  📜 Motif Meaning
+                </button>
+                <button type="button" class="chat-suggestion-chip px-2.5 py-1 rounded-full bg-stone-100 hover:bg-amber-100 text-[11px] text-stone-700 border border-stone-300 transition-colors" data-query="How should I keep my brush strokes steady for this style?">
+                  🖌️ Brush Technique
+                </button>
+              </div>
+
+              <!-- Chat messages container -->
+              <div id="learn-chat-messages" class="h-44 overflow-y-auto space-y-2.5 p-3 rounded-xl bg-stone-50 border border-stone-200">
+                <!-- Chat bubbles rendered dynamically -->
+              </div>
+
+              <!-- Chat input form -->
+              <form id="learn-chat-form" class="flex gap-2">
+                <input type="text" id="learn-chat-input" placeholder="Ask about this painting's history, pigments, or techniques..." class="flex-1 px-3 py-2 text-xs bg-white border border-stone-300 rounded-xl focus:outline-none focus:border-terracotta">
+                <button type="submit" class="px-4 py-2 bg-stone-900 hover:bg-stone-800 text-white rounded-xl text-xs font-semibold shadow transition-colors">
+                  Send
+                </button>
+              </form>
+            </div>
+
+            <!-- Bottom Button to Practice Mode -->
+            <div class="pt-6">
+              <a id="btn-go-to-practice" href="#practice/nagpur" class="w-full py-4 px-6 rounded-2xl bg-terracotta hover:bg-terracotta-dark text-white font-bold text-center text-sm shadow-xl hover:shadow-2xl transition-all transform hover:-translate-y-0.5 flex items-center justify-center gap-2">
+                <span>Go to Practice Mode (Drawing Canvas + Live AI)</span>
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+              </a>
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==========================================
+         PAGE 4: PRACTICE MODE (Canvas + Real Paper Webcam + Live AI)
+    =========================================== -->
+    <section id="page-practice" class="app-page hidden py-8">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-6">
+        
+        <!-- Studio Header with Mode Switcher -->
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-3 border-b border-stone-200">
+          <div>
+            <span class="text-xs font-bold uppercase tracking-wider text-terracotta">Practice Studio</span>
+            <h2 id="practice-art-heading" class="text-2xl sm:text-3xl font-bold font-display text-stone-900">
+              Nagpur • Chitari art
+            </h2>
+          </div>
+
+          <!-- Mode Toggle: Digital Canvas vs Real Paper Webcam -->
+          <div class="flex items-center gap-2 bg-stone-200/80 p-1.5 rounded-2xl">
+            <button id="btn-mode-canvas" type="button" class="px-4 py-2 rounded-xl bg-terracotta text-white text-xs font-bold shadow flex items-center gap-1.5 transition-all">
+              <span>🎨</span>
+              <span>Digital Canvas</span>
+            </button>
+            <button id="btn-mode-webcam" type="button" class="px-4 py-2 rounded-xl bg-stone-100 text-stone-700 hover:text-stone-900 text-xs font-bold shadow flex items-center gap-1.5 transition-all">
+              <span>📷</span>
+              <span>Real Paper &amp; Webcam</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Step Milestone Guidance Banner -->
+        <div id="practice-milestone-banner" class="bg-amber-100/80 border-2 border-amber-300 p-3.5 rounded-2xl shadow-sm">
+          <!-- Populated dynamically by aiClientInstance.updateMilestoneBanner() -->
+        </div>
+
+        <!-- TWO PANELS SIDE BY SIDE (STACKED ON MOBILE) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- LEFT PANEL (5 COLS): REFERENCE IMAGE & LIVE AI GUIDANCE -->
+          <div class="lg:col-span-5 space-y-4">
+            
+            <!-- "Make this painting" Target Reference Box -->
+            <div class="bg-white rounded-2xl border-2 border-stone-200 p-4 shadow-sm space-y-3">
+              <div class="flex items-center justify-between">
+                <span class="text-xs font-bold uppercase tracking-wider text-stone-600 flex items-center gap-1.5">
+                  <span>🎯</span>
+                  <span>Make this painting:</span>
+                </span>
+                <span class="text-[11px] text-stone-400">Always visible</span>
+              </div>
+
+              <!-- Big Target Image -->
+              <div class="folk-border bg-amber-50/50 rounded-xl p-3 aspect-square flex items-center justify-center">
+                <img id="practice-reference-img" src="images/nagpur.svg" alt="Make this painting reference" class="w-full h-full object-contain">
+              </div>
+
+              <!-- Current Step Hints -->
+              <div class="bg-amber-50/70 p-3 rounded-xl border border-amber-200 space-y-1.5">
+                <span class="text-[11px] font-bold text-amber-900 uppercase tracking-wide block">Step Hints for this Artwork:</span>
+                <div id="practice-steps-hint-box" class="space-y-1">
+                  <!-- Populated dynamically -->
+                </div>
+              </div>
+            </div>
+
+            <!-- LIVE AI FEEDBACK PANEL -->
+            <div class="bg-white rounded-2xl border-2 border-amber-600 p-5 shadow-md space-y-4">
+              
+              <div class="flex items-center justify-between">
+                <div class="flex items-center gap-2">
+                  <div class="w-7 h-7 rounded-full bg-amber-600 text-white font-bold text-xs flex items-center justify-center font-display">
+                    AI
+                  </div>
+                  <div>
+                    <h4 class="text-sm font-bold text-stone-900 font-display">Live AI Vision Feedback</h4>
+                    <p class="text-[11px] text-stone-500">Real-time style analysis &amp; critique</p>
+                  </div>
+                </div>
+
+                <!-- Loading Spinner -->
+                <div id="ai-loading-spinner" class="hidden flex items-center gap-1.5 text-xs text-terracotta font-semibold">
+                  <svg class="animate-spin h-4 w-4 text-terracotta" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+                  <span>Analyzing...</span>
+                </div>
+              </div>
+
+              <!-- Button: Check My Painting -->
+              <button id="btn-check-painting" type="button" class="w-full py-2.5 px-4 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold shadow flex items-center justify-center gap-2 transition-all pulse-glow">
+                <span>🔍 Check my painting</span>
+              </button>
+
+              <!-- Accuracy Score Bar -->
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-semibold">
+                  <span class="text-stone-600">Accuracy Score</span>
+                  <span id="accuracy-score-display" class="text-stone-900 font-mono text-sm">0%</span>
+                </div>
+                <div class="w-full h-2.5 bg-stone-200 rounded-full overflow-hidden">
+                  <div id="accuracy-score-bar" class="h-full bg-terracotta transition-all duration-500" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <!-- Detailed Feedback Content (What is right, What is wrong, Next step) -->
+              <div id="ai-feedback-content">
+                <!-- Rendered dynamically by ai.js -->
+              </div>
+
+              <!-- Short Feedback Improvement History -->
+              <div id="ai-feedback-history">
+                <!-- Rendered dynamically -->
+              </div>
+
+            </div>
+
+          </div>
+
+          <!-- RIGHT PANEL (7 COLS): DIGITAL CANVAS OR WEBCAM PAPER SCANNER -->
+          <div class="lg:col-span-7 space-y-4">
+            
+            <!-- OPTION A: DIGITAL CANVAS CONTAINER -->
+            <div id="practice-canvas-container" class="space-y-4">
+              
+              <!-- Canvas Toolbar -->
+              <div class="p-4 bg-white rounded-2xl border-2 border-stone-200 shadow-sm space-y-3.5">
+                
+                <!-- Tools Row -->
+                <div class="flex flex-wrap items-center justify-between gap-2.5">
+                  
+                  <!-- Tool Selection -->
+                  <div class="flex items-center gap-1 bg-stone-100 p-1 rounded-xl">
+                    <button type="button" data-canvas-tool="brush" class="tool-btn active px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5" title="Fluid Brush">
+                      <span>🖌️</span>
+                      <span>Brush</span>
+                    </button>
+                    <button type="button" data-canvas-tool="pen" class="tool-btn px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5" title="Fine Pen">
+                      <span>✒️</span>
+                      <span>Pen</span>
+                    </button>
+                    <button type="button" data-canvas-tool="dots" class="tool-btn px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5" title="Gond/Bhil Dots">
+                      <span>⁖</span>
+                      <span>Dots</span>
+                    </button>
+                    <button type="button" data-canvas-tool="hatch" class="tool-btn px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5" title="Tribal Hatching">
+                      <span>///</span>
+                      <span>Hatch</span>
+                    </button>
+                    <button type="button" data-canvas-tool="eraser" class="tool-btn px-3 py-1.5 text-xs font-medium rounded-lg flex items-center gap-1.5" title="Eraser">
+                      <span>🧹</span>
+                      <span>Eraser</span>
+                    </button>
+                  </div>
+
+                  <!-- History Controls -->
+                  <div class="flex items-center gap-1.5">
+                    <button id="btn-undo" type="button" class="px-2.5 py-1.5 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 hover:bg-stone-200 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-semibold shadow-sm" title="Undo">
+                      ↩️ Undo
+                    </button>
+                    <button id="btn-redo" type="button" class="px-2.5 py-1.5 rounded-lg bg-stone-100 border border-stone-300 text-stone-700 hover:bg-stone-200 disabled:opacity-30 disabled:cursor-not-allowed text-xs font-semibold shadow-sm" title="Redo">
+                      ↪️ Redo
+                    </button>
+                    <button id="btn-clear-canvas" type="button" class="px-2.5 py-1.5 rounded-lg bg-rose-50 border border-rose-200 text-rose-700 hover:bg-rose-100 text-xs font-semibold shadow-sm" title="Clear Canvas">
+                      🗑️ Clear
+                    </button>
+                  </div>
+
+                </div>
+
+                <!-- Color Palette & Brush Slider -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-3 border-t border-stone-100">
+                  
+                  <!-- Traditional Palette for Selected Art -->
+                  <div class="flex items-center gap-2.5">
+                    <span class="text-xs font-semibold text-stone-700">Palette:</span>
+                    <div id="practice-palette-swatches" class="flex items-center gap-1.5">
+                      <!-- Populated dynamically -->
+                    </div>
+                    <!-- Color Picker -->
+                    <div class="relative flex items-center pl-1">
+                      <input type="color" id="input-custom-color" value="#B83A24" class="w-6 h-6 rounded-full border border-stone-300 cursor-pointer p-0 overflow-hidden" title="Choose Custom Color">
+                    </div>
+                    <span id="selected-color-name" class="text-[11px] font-medium text-stone-500 hidden sm:inline">Tone 1</span>
+                  </div>
+
+                  <!-- Brush Size Slider -->
+                  <div class="flex items-center gap-2">
+                    <span class="text-xs text-stone-600 font-medium">Size:</span>
+                    <input type="range" id="slider-brush-size" min="2" max="32" value="6" class="w-20 accent-terracotta cursor-pointer">
+                    <span id="brush-size-val" class="text-xs font-mono text-stone-700 w-8">6px</span>
+                  </div>
+
+                </div>
+
+                <!-- Tracing Guide Toggle & Opacity Slider -->
+                <div class="flex flex-wrap items-center justify-between gap-3 pt-2.5 border-t border-stone-100 bg-amber-50/70 p-2.5 rounded-xl border border-amber-200">
+                  <label class="flex items-center gap-2 text-xs font-semibold text-stone-800 cursor-pointer">
+                    <input type="checkbox" id="check-tracing-guide" checked class="w-4 h-4 rounded accent-terracotta">
+                    <span>Show faint reference outline for tracing help</span>
+                  </label>
+
+                  <div class="flex items-center gap-2">
+                    <span class="text-[11px] text-stone-500">Opacity:</span>
+                    <input type="range" id="slider-guide-opacity" min="0" max="0.8" step="0.05" value="0.35" class="w-20 accent-terracotta cursor-pointer">
+                  </div>
+                </div>
+
+              </div>
+
+              <!-- HTML5 DRAWING CANVAS WRAPPER (With pixel-perfect crosshair & brush preview) -->
+              <div class="relative rounded-2xl border-4 border-stone-300 overflow-hidden shadow-inner bg-[#FAF7F2] flex items-center justify-center min-h-[380px] cursor-crosshair">
+                
+                <!-- Faint Reference Image / SVG Outline Overlay -->
+                <div id="canvas-guide-overlay" class="absolute inset-0 pointer-events-none p-4 flex items-center justify-center opacity-35 z-0">
+                  <!-- SVG guide path rendered dynamically -->
+                </div>
+
+                <!-- Floating Custom Brush Cursor Ring Preview -->
+                <div id="canvas-brush-cursor" class="brush-cursor-indicator"></div>
+
+                <!-- Active HTML5 Canvas (Hardware crosshair precision) -->
+                <canvas id="practice-canvas" class="relative z-10 cursor-crosshair block"></canvas>
+
+              </div>
+
+              <!-- Canvas Bottom Actions: Download PNG & Tips -->
+              <div class="flex flex-wrap items-center justify-between gap-3 pt-1">
+                <span class="text-xs text-stone-500 italic">
+                  ✏️ Buttery smooth strokes for mouse, touch, and stylus pen.
+                </span>
+                <button id="btn-download-png" type="button" class="px-4 py-2 rounded-xl bg-forestGreen hover:bg-forestGreen-dark text-white text-xs font-semibold shadow-md flex items-center gap-1.5 transition-all hover:scale-105">
+                  <span>📥 Download Drawing as PNG</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- OPTION B: REAL PAPER EXTERNAL WEBCAM SCANNER -->
+            <div id="practice-webcam-container" class="hidden space-y-4">
+              
+              <div class="p-4 bg-white rounded-2xl border-2 border-stone-200 shadow-sm space-y-3">
+                <div class="flex flex-wrap items-center justify-between gap-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-3 h-3 rounded-full bg-emerald-500 animate-ping"></span>
+                    <span class="text-xs font-bold text-stone-900">External Webcam Paper Scanner</span>
+                  </div>
+
+                  <!-- External Webcam Controls -->
+                  <div class="flex flex-wrap items-center gap-2">
+                    <select id="webcam-camera-select" class="px-2.5 py-1.5 text-xs font-medium rounded-xl border border-stone-300 bg-stone-50 focus:outline-none">
+                      <option value="">Detecting Cameras...</option>
+                    </select>
+
+                    <button id="btn-switch-external-cam" type="button" class="px-3 py-1.5 bg-amber-500 hover:bg-amber-400 text-stone-950 rounded-xl text-xs font-bold shadow-sm flex items-center gap-1.5 transition-colors" title="Switch to newly attached USB external webcam">
+                      <span>🔄 External Cam</span>
+                    </button>
+
+                    <button id="btn-webcam-mirror" type="button" class="px-3 py-1.5 bg-stone-100 hover:bg-stone-200 text-stone-700 rounded-xl text-xs font-medium border border-stone-300 transition-colors">
+                      🪞 Mirrored: OFF
+                    </button>
+                  </div>
+                </div>
+
+                <div class="flex flex-wrap items-center justify-between text-xs text-stone-600 gap-2 pt-1 border-t border-stone-100">
+                  <span>Draw on physical paper under the camera. The AI inspects your lines live and guides you step by step!</span>
+                  <div id="webcam-status-msg" class="text-[11px] font-medium text-stone-500">
+                    Scanning for connected cameras...
+                  </div>
+                </div>
+              </div>
+
+              <!-- Live Camera Viewfinder with Paper Framing Brackets & Laser Scan -->
+              <div class="webcam-viewport-container relative">
+                <video id="webcam-video" autoplay playsinline muted></video>
+
+                <!-- Paper Framing Overlay -->
+                <div class="paper-frame-overlay">
+                  <div class="corner-bracket top-left"></div>
+                  <div class="corner-bracket top-right"></div>
+                  <div class="corner-bracket bottom-left"></div>
+                  <div class="corner-bracket bottom-right"></div>
+                  <span class="text-[11px] text-amber-200 font-bold bg-stone-900/80 px-3.5 py-1 rounded-full backdrop-blur-sm border border-amber-400/40 tracking-wide">
+                    📄 Place Physical Paper Within Gold Brackets
+                  </span>
+                </div>
+
+                <!-- Laser scanning line -->
+                <div id="webcam-laser-line" class="laser-scan-line"></div>
+
+                <!-- Live Auto-Check Indicator Banner -->
+                <div id="webcam-live-indicator" class="hidden absolute top-3 left-3 bg-rose-600 text-white text-[11px] font-bold px-3 py-1 rounded-full shadow-lg flex items-center gap-2 animate-pulse z-30">
+                  <span class="w-2 h-2 rounded-full bg-white"></span>
+                  <span>LIVE CHECKING PAPER (Every 3s)</span>
+                </div>
+              </div>
+
+              <!-- Webcam Action Controls & Live Preview -->
+              <div class="p-4 bg-white rounded-2xl border-2 border-stone-200 shadow-sm flex flex-wrap items-center justify-between gap-3">
+                <div class="flex flex-wrap items-center gap-3">
+                  <button id="btn-scan-paper" type="button" class="px-5 py-2.5 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold shadow-md flex items-center gap-2 transition-all transform hover:-translate-y-0.5">
+                    <span>📸 Check Paper Drawing Now</span>
+                  </button>
+
+                  <button id="btn-live-check-toggle" type="button" class="px-4 py-2.5 rounded-xl bg-stone-900 hover:bg-stone-800 text-white text-xs font-bold shadow-md flex items-center gap-2 transition-all">
+                    <span>🔴 Live Continuous Check (Every 3s)</span>
+                  </button>
+                </div>
+
+                <!-- Latest Paper Snapshot Preview -->
+                <div class="flex items-center gap-2">
+                  <span class="text-[11px] text-stone-500 font-medium">Last Scanned:</span>
+                  <img id="webcam-snapshot-thumbnail" alt="Paper snapshot" class="hidden w-12 h-10 rounded-lg border border-stone-300 object-cover shadow-sm bg-stone-100">
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ==========================================
+       FINAL RESULT MODAL (Completed Session)
+  =========================================== -->
+  <div id="final-result-modal" class="hidden fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border-2 border-stone-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-6 animate-in zoom-in-95 duration-200">
+      
+      <!-- Modal Header -->
+      <div class="flex items-center justify-between pb-4 border-b border-stone-200">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider text-terracotta">Practice Complete</span>
+          <h3 class="text-2xl font-bold font-display text-stone-900">Your Painting Evaluation</h3>
+        </div>
+        <button id="btn-modal-close" class="text-stone-400 hover:text-stone-700 text-lg font-bold p-1">
+          &times;
+        </button>
+      </div>
+
+      <!-- Score Showcase -->
+      <div class="text-center py-4 bg-amber-50 rounded-2xl border border-amber-200 space-y-1">
+        <span class="text-xs uppercase font-bold text-amber-900 tracking-wider">Final Accuracy Score</span>
+        <div id="modal-final-score" class="text-5xl font-black text-terracotta font-display">
+          82%
+        </div>
+        <p class="text-xs text-stone-600 font-medium">Certified Vidarbha Folk Art Practice Session</p>
+      </div>
+
+      <!-- Strengths list -->
+      <div class="space-y-1.5">
+        <h4 class="text-xs font-bold text-emerald-800 flex items-center gap-1">
+          <span>✅</span>
+          <span>Strengths in your painting:</span>
+        </h4>
+        <ul id="modal-final-strengths" class="space-y-1 pl-1">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+
+      <!-- Things to improve list -->
+      <div class="space-y-1.5">
+        <h4 class="text-xs font-bold text-rose-800 flex items-center gap-1">
+          <span>🎯</span>
+          <span>Things to improve next time:</span>
+        </h4>
+        <ul id="modal-final-improve" class="space-y-1 pl-1">
+          <!-- Populated dynamically -->
+        </ul>
+      </div>
+
+      <!-- Modal Action Buttons -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-2.5 pt-4 border-t border-stone-200">
+        <button id="btn-modal-try-again" type="button" class="w-full py-2.5 px-3 rounded-xl bg-stone-100 hover:bg-stone-200 text-stone-800 text-xs font-bold shadow-sm transition-colors">
+          Try again
+        </button>
+        <button id="btn-modal-download" type="button" class="w-full py-2.5 px-3 rounded-xl bg-forestGreen hover:bg-forestGreen-dark text-white text-xs font-bold shadow-sm transition-colors">
+          Download PNG
+        </button>
+        <button id="btn-modal-choose-another" type="button" class="w-full py-2.5 px-3 rounded-xl bg-terracotta hover:bg-terracotta-dark text-white text-xs font-bold shadow-sm transition-colors">
+          Choose another art
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================
+       KALA PASSPORT MODAL (Stamps, Badges & Gallery)
+  =========================================== -->
+  <div id="passport-modal" class="hidden fixed inset-0 z-50 bg-stone-950/70 backdrop-blur-sm items-center justify-center p-4">
+    <div class="passport-cover-leather rounded-3xl max-w-2xl w-full p-6 sm:p-8 space-y-6 text-stone-900 bg-[#FAF7F2] border-4 border-amber-400 shadow-2xl animate-in zoom-in-95 duration-200 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Passport Header -->
+      <div class="flex items-center justify-between pb-4 border-b-2 border-stone-300">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500 text-stone-950 font-bold text-2xl flex items-center justify-center font-display shadow-md">
+            🛂
+          </div>
+          <div>
+            <h3 class="text-2xl font-bold font-display text-amber-950">My Kala Passport</h3>
+            <p class="text-xs text-stone-600">Personal Cultural Art Collection &amp; Heritage Achievements</p>
+          </div>
+        </div>
+        <button id="btn-passport-close" class="text-stone-400 hover:text-stone-800 text-2xl font-bold p-1">
+          &times;
+        </button>
+      </div>
+
+      <!-- Passport Tabs -->
+      <div class="flex items-center gap-4 border-b border-stone-200 text-xs font-bold">
+        <button type="button" data-passport-tab="stamps" class="active pb-2.5 border-b-2 border-terracotta text-terracotta transition-colors">
+          🏛️ Regional Stamps (7 Cities)
+        </button>
+        <button type="button" data-passport-tab="badges" class="pb-2.5 border-b-2 border-transparent text-stone-500 hover:text-stone-900 transition-colors">
+          🏅 Technique Badges
+        </button>
+        <button type="button" data-passport-tab="gallery" class="pb-2.5 border-b-2 border-transparent text-stone-500 hover:text-stone-900 transition-colors">
+          🖼️ Personal Gallery
+        </button>
+      </div>
+
+      <!-- Tab 1: Stamps -->
+      <div id="passport-tab-stamps" class="passport-tab-content space-y-4">
+        <p class="text-xs text-stone-600">
+          Explore Vidarbha's cities and practice their folk arts to earn official cultural ink stamps!
+        </p>
+        <div id="passport-stamps-grid" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 2: Badges -->
+      <div id="passport-tab-badges" class="passport-tab-content hidden space-y-4">
+        <p class="text-xs text-stone-600">
+          Rewarded for curiosity, practice, and learning techniques—not just accuracy!
+        </p>
+        <div id="passport-badges-grid" class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+      <!-- Tab 3: Personal Gallery -->
+      <div id="passport-tab-gallery" class="passport-tab-content hidden space-y-4">
+        <p class="text-xs text-stone-600">
+          Your saved drawings with authentic Vidarbha folk certificates:
+        </p>
+        <div id="passport-gallery-grid" class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <!-- Populated dynamically -->
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ==========================================
+       FOLKLORE & STORYTELLER MODAL
+  =========================================== -->
+  <div id="story-modal" class="hidden fixed inset-0 z-50 bg-stone-900/60 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-white rounded-3xl border-2 border-stone-200 shadow-2xl max-w-lg w-full p-6 sm:p-8 space-y-5 animate-in zoom-in-95 duration-200 max-h-[85vh] overflow-y-auto">
+      
+      <div class="flex items-center justify-between pb-3 border-b border-stone-200">
+        <div>
+          <span id="story-modal-city" class="text-xs font-bold uppercase tracking-wider text-terracotta">Nagpur, Vidarbha</span>
+          <h3 id="story-modal-title" class="text-xl font-bold font-display text-stone-900">Folklore &amp; Heritage Story</h3>
+        </div>
+        <button id="btn-story-close" class="text-stone-400 hover:text-stone-800 text-2xl font-bold p-1">
+          &times;
+        </button>
+      </div>
+
+      <!-- Story in English -->
+      <div class="space-y-2 bg-amber-50/60 p-4 rounded-2xl border border-amber-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-amber-900">English Narrative</span>
+          <button id="btn-story-listen-en" class="px-2.5 py-1 rounded bg-amber-200 hover:bg-amber-300 text-amber-950 text-[11px] font-semibold flex items-center gap-1">
+            <span>🔊 Listen</span>
+          </button>
+        </div>
+        <p id="story-text-en" class="text-xs text-stone-700 leading-relaxed font-sans"></p>
+      </div>
+
+      <!-- Story in Hindi -->
+      <div class="space-y-2 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-stone-800">हिंदी विवरण (Hindi)</span>
+          <button id="btn-story-listen-hi" class="px-2.5 py-1 rounded bg-stone-200 hover:bg-stone-300 text-stone-900 text-[11px] font-semibold flex items-center gap-1">
+            <span>🔊 सुनें</span>
+          </button>
+        </div>
+        <p id="story-text-hi" class="text-xs text-stone-700 leading-relaxed font-sans"></p>
+      </div>
+
+      <!-- Story in Marathi -->
+      <div class="space-y-2 bg-stone-50 p-4 rounded-2xl border border-stone-200">
+        <div class="flex items-center justify-between">
+          <span class="text-xs font-bold text-stone-800">मराठी कथा (Marathi)</span>
+          <button id="btn-story-listen-mr" class="px-2.5 py-1 rounded bg-stone-200 hover:bg-stone-300 text-stone-900 text-[11px] font-semibold flex items-center gap-1">
+            <span>🔊 ऐका</span>
+          </button>
+        </div>
+        <p id="story-text-mr" class="text-xs text-stone-700 leading-relaxed font-sans"></p>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Notification Toast for Passport Unlocks -->
+  <div id="passport-toast" class="hidden"></div>
+
+  <!-- ==========================================
+       FOOTER
+  =========================================== -->
+  <footer class="bg-stone-950 text-stone-400 py-12 border-t-4 border-terracotta mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-4">
+      
+      <!-- Project Name -->
+      <div class="flex items-center justify-center gap-2.5">
+        <div class="w-7 h-7 rounded-full bg-amber-500 text-stone-950 font-bold text-sm flex items-center justify-center font-display">
+          K
+        </div>
+        <span class="text-xl font-bold font-display text-white">Kala Guru</span>
+      </div>
+
+      <!-- Dedicated line about preserving Vidarbha's art -->
+      <p class="text-xs text-stone-400 max-w-xl mx-auto leading-relaxed">
+        Dedicated to preserving, documenting, and teaching the traditional folk art and tribal heritage of the cities of Vidarbha, Maharashtra through interactive AI education.
+      </p>
+
+      <div class="text-[11px] text-stone-500 pt-6 border-t border-stone-800">
+        &copy; 2026 Kala Guru Project. All text and AI guidance strictly in English.
+      </div>
+
+    </div>
+  </footer>
+
+  <!-- Application Scripts (Direct execution - no build step or Node server needed) -->
+  <script src="config.js"></script>
+  <script src="arts.js"></script>
+  <script src="canvas.js"></script>
+  <script src="ai.js"></script>
+  <script src="app.js"></script>
+
+</body>
+</html>
